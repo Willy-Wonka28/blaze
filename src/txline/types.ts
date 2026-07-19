@@ -71,26 +71,26 @@ export interface SoccerFixtureScore {
 }
 
 export interface ScoreEntry {
-  fixtureId: number;
-  gameState: string;
-  startTime: number;
-  isTeam: boolean;
-  fixtureGroupId: number;
-  competitionId: number;
-  countryId: number;
-  sportId: number;
-  participant1IsHome: boolean;
-  participant1Id: number;
-  participant2Id: number;
-  action: string;
-  id: number;
-  ts: number;
-  connectionId: number;
-  seq: number;
-  dataSoccer?: SoccerData;
-  scoreSoccer?: SoccerFixtureScore;
-  stats?: Record<string, number>;
-  participant?: number;
+  FixtureId: number;
+  GameState: string;
+  StartTime: number;
+  IsTeam: boolean;
+  FixtureGroupId: number;
+  CompetitionId: number;
+  CountryId: number;
+  SportId: number;
+  Participant1IsHome: boolean;
+  Participant1Id: number;
+  Participant2Id: number;
+  Action: string;
+  Id: number;
+  Ts: number;
+  ConnectionId: number;
+  Seq: number;
+  DataSoccer?: SoccerData;
+  ScoreSoccer?: SoccerFixtureScore;
+  Stats?: Record<string, number>;
+  Participant?: number;
 }
 
 export interface StatValidation {

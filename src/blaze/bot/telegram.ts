@@ -788,7 +788,12 @@ export function initBot(): void {
   });
 
   b.catch((err, ctx) => {
-    log("Blaze", `Bot error for ${ctx.updateType}: ${err instanceof Error ? err.message : String(err)}`);
+    const errMsg = err instanceof Error
+      ? err.stack || err.message
+      : typeof err === "object"
+        ? JSON.stringify(err)
+        : String(err);
+    log("Blaze", `Bot error for ${ctx.updateType}: ${errMsg}`);
   });
 
   b.telegram.setMyCommands([

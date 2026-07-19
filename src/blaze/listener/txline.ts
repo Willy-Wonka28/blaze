@@ -67,13 +67,13 @@ export async function startTxLineListener(client: TxLineClient): Promise<void> {
       const score = parseSseData<ScoreEntry>(message.data);
       if (!score) continue;
       
-      log("Blaze", `📡 TxLINE update received for fixture ${score.fixtureId} (FixtureId: ${(score as any).FixtureId}). Keys: ${Object.keys(score).join(",")}`);
+      log("Blaze", `📡 TxLINE update received for fixture ${score.FixtureId}`);
 
       if (isGoalEvent(score)) {
-        const fixtureId = score.fixtureId;
-        const scorerPlayerId = score.dataSoccer?.PlayerId ?? 0;
+        const fixtureId = score.FixtureId;
+        const scorerPlayerId = score.DataSoccer?.PlayerId ?? 0;
 
-        const dedupId = message.id ?? score.id;
+        const dedupId = message.id ?? score.Id;
         if (dedupId === undefined) {
           log("Blaze", `Goal event in fixture ${fixtureId} has no message.id or score.id — processing without dedup key`);
         } else if (wasGoalProcessed(fixtureId, dedupId)) {

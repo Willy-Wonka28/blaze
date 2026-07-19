@@ -59,13 +59,13 @@ export function statKeyToReadable(statKey: number): string {
 }
 
 export function isGoalEvent(score: ScoreEntry): boolean {
-  return score.dataSoccer?.Goal === true;
+  return score.DataSoccer?.Goal === true;
 }
 
 export function isMatchFinal(score: ScoreEntry): boolean {
-  // TxLINE may send the gameState as either the key ("F2") or the name ("F").
+  // TxLINE may send the GameState as either the key ("F2") or the name ("F").
   // Support both to be safe.
-  return score.gameState === "F" || score.gameState === "F2" || score.gameState === "FET" || score.gameState === "FPE";
+  return score.GameState === "F" || score.GameState === "F2" || score.GameState === "FET" || score.GameState === "FPE";
 }
 
 export function getGoalsFromStats(
