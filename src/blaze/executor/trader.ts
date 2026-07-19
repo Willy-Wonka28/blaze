@@ -79,7 +79,7 @@ export function handleGoalEvent(
     return;
   }
 
-  log("Blaze", `${playerName} scored #${newGoalCount} — line ${targetMarket.line} (token: ${targetMarket.token_yes?.slice(0, 12)}...)`);
+  log("Blaze", `⚽ ${playerName} scores! (Goal #${newGoalCount}) — targeting line ${targetMarket.line} (token: ${targetMarket.token_yes?.slice(0, 12)}...)`);
 
   const users = getActiveUsersFromCache();
   pipelineTimer.checkpoint("users_lookup");
@@ -107,6 +107,7 @@ export function handleGoalEvent(
     }
 
     if (user.isTest) {
+      log("Blaze", `📄 Paper trade placed: $${betSize} on Yes at ${targetMarket.yes_price.toFixed(2)} for ${playerName} O-${targetLine}`);
       notifyUserDelayed(
         user.chatId,
         `📝 Paper Trade Placed — ${ts}\n` +
@@ -119,6 +120,7 @@ export function handleGoalEvent(
     fireTrade(user, fixtureId, playerName, targetLine, targetMarket, betSize, pipelineTimer)
       .then((orderId) => {
         if (orderId) {
+          log("Blaze", `💸 Trade placed: $${betSize} on Yes at ${threshold.toFixed(2)} for ${playerName} O-${targetLine}`);
           incrementDailySpend(user.chatId, betSize);
           tradesAttempted++;
         }

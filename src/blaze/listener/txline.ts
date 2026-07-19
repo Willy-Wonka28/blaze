@@ -66,6 +66,8 @@ export async function startTxLineListener(client: TxLineClient): Promise<void> {
       const t0 = performance.now();
       const score = parseSseData<ScoreEntry>(message.data);
       if (!score) continue;
+      
+      log("Blaze", `📡 TxLINE update received for fixture ${score.fixtureId}`);
 
       if (isGoalEvent(score)) {
         const fixtureId = score.fixtureId;

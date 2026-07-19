@@ -28,6 +28,13 @@ function getBot(): Telegraf {
   return bot;
 }
 
+export function stopBot(signal = "SIGTERM"): void {
+  if (bot) {
+    log("Blaze", `Stopping Telegram bot (${signal})...`);
+    bot.stop(signal);
+  }
+}
+
 export function broadcast(message: string): void {
   const users = getActiveUsersFromCache();
   for (const user of users) {
@@ -443,6 +450,7 @@ export function initBot(): void {
 
   b.start(async (ctx) => {
     const chatId = ctx.chat.id;
+    log("Blaze", `User ${chatId} ran /start`);
     removeTestUser(chatId);
     const existing = await getUserByChatId(chatId);
 
@@ -455,6 +463,7 @@ export function initBot(): void {
 
   b.command("test", async (ctx) => {
     const chatId = ctx.chat.id;
+    log("Blaze", `User ${chatId} ran /test`);
     const summary = getCachedFixtureSummary();
 
     if (summary.marketCount === 0) {
@@ -522,12 +531,14 @@ export function initBot(): void {
   });
 
   b.command("stop", async (ctx) => {
+    log("Blaze", `User ${ctx.chat.id} ran /stop`);
     await updateUserByChatId(ctx.chat.id, { is_active: false });
     await ctx.reply("⏸️ Bot deactivated. Use /start to re-enable.");
   });
 
   b.command("status", async (ctx) => {
     const chatId = ctx.chat.id;
+    log("Blaze", `User ${chatId} ran /status`);
     const user = await getUserByChatId(chatId);
     const stats = await getUserTradeStats(chatId);
 
@@ -565,6 +576,7 @@ export function initBot(): void {
 
   b.command("threshold", async (ctx) => {
     const chatId = ctx.chat.id;
+    log("Blaze", `User ${chatId} ran /threshold`);
     const arg = ctx.message.text.split(" ")[1];
     const value = arg ? parseFloat(arg) : undefined;
 
@@ -594,6 +606,7 @@ export function initBot(): void {
 
   b.command("bet_size", async (ctx) => {
     const chatId = ctx.chat.id;
+    log("Blaze", `User ${chatId} ran /bet_size`);
     const arg = ctx.message.text.split(" ")[1];
     const value = arg ? parseFloat(arg) : undefined;
 
@@ -623,6 +636,7 @@ export function initBot(): void {
 
   b.command("max_exposure", async (ctx) => {
     const chatId = ctx.chat.id;
+    log("Blaze", `User ${chatId} ran /max_exposure`);
     const arg = ctx.message.text.split(" ")[1];
     const value = arg ? parseFloat(arg) : undefined;
 
@@ -651,6 +665,7 @@ export function initBot(): void {
   });
 
   b.command("wallet", async (ctx) => {
+    log("Blaze", `User ${ctx.chat.id} ran /wallet`);
     const user = await getUserByChatId(ctx.chat.id);
 
     if (!user?.wallet_address) {
@@ -668,6 +683,7 @@ export function initBot(): void {
 
   b.command("pnl", async (ctx) => {
     const chatId = ctx.chat.id;
+    log("Blaze", `User ${chatId} ran /pnl`);
     const stats = await getUserTradeStats(chatId);
     const recent = await getRecentTrades(chatId, 5);
 
@@ -696,6 +712,7 @@ export function initBot(): void {
 
   b.command("withdraw", async (ctx) => {
     const chatId = ctx.chat.id;
+    log("Blaze", `User ${chatId} ran /withdraw`);
     const destination = ctx.message.text.split(" ")[1];
 
     if (!destination) {
@@ -766,6 +783,7 @@ export function initBot(): void {
   });
 
   b.command("help", async (ctx) => {
+    log("Blaze", `User ${ctx.chat.id} ran /help`);
     await ctx.reply(HELP_TEXT, { parse_mode: "HTML" });
   });
 
