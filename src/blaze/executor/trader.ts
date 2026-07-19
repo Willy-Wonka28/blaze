@@ -16,7 +16,7 @@ import {
   type CachedUser,
 } from "../cache.js";
 import { insertTrade } from "../supabase.js";
-import { notifyUserDelayed } from "../bot/telegram.js";
+import { notifyUserDelayed, broadcast } from "../bot/telegram.js";
 import { config } from "../../config.js";
 import { placeFAKOrder } from "./clob.js";
 import { decrypt } from "../crypto/aes.js";
@@ -71,6 +71,11 @@ export function handleGoalEvent(
 
   pipelineTimer.checkpoint("goal_tracking");
 
+  // Defer broadcast so it doesn't block the hot path
+  setImmediate(() => {
+    broadcast(`⚽ Goal Alert: ${playerName} just scored! (Goal #${newGoalCount})`);
+  });
+
   const targetLine = previousGoals + 0.5;
   const targetMarket = markets.find((m) => Math.abs(m.line - targetLine) < 0.01);
 
@@ -100,9 +105,9 @@ export function handleGoalEvent(
     if (!user.isTest) {
       notifyUserDelayed(
         user.chatId,
-        `⚽ ${playerName} scored! (goal #${newGoalCount}) — ${ts}\n` +
-        `📊 Market: ${playerName} ${targetLine}+ goals\n` +
-        `🎯 Price: ${targetMarket.yes_price.toFixed(2)} (threshold: ${threshold.toFixed(2)})`
+        `💸 Trade Executing — ${ts}\n` +
+        `Bought shares of ${playerName} ${targetLine}+ goals\n` +
+        `🎯 Market price: ${targetMarket.yes_price.toFixed(2)} (threshold: ${threshold.toFixed(2)})`
       );
     }
 
@@ -111,7 +116,7 @@ export function handleGoalEvent(
       notifyUserDelayed(
         user.chatId,
         `📝 Paper Trade Placed — ${ts}\n` +
-        `Bought ~${shares} shares of ${playerName} O-${targetLine} because he just scored a goal.`
+        `Bought ~${shares} shares of ${playerName} O-${targetLine} at ${targetMarket.yes_price.toFixed(2)}.`
       );
       continue;
     }
