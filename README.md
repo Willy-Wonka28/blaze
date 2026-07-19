@@ -2,7 +2,7 @@
 
 > A Telegram bot that auto-trades Polymarket over/under goals markets using real-time TxLINE data.
 
-[▶️ **Watch Demo**](https://drive.google.com/file/d/1zKTwluycIhENR2ppCDvg7BUpzvTEiyyc/view?usp=drivesdk)
+[▶️ **Watch Demo**](https://drive.google.com/file/d/1zKTwluycIhENR2ppCDvg7BUpzvTEiyyc/view?usp=sharing)
 
 [🤖 **Try the Bot**](https://t.me/blaze_sport_bot)
 
