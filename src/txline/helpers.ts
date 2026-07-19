@@ -59,7 +59,9 @@ export function statKeyToReadable(statKey: number): string {
 }
 
 export function isGoalEvent(score: ScoreEntry): boolean {
-  return score.DataSoccer?.Goal === true;
+  if (score.DataSoccer?.Goal === true) return true;
+  if (score.Action === "goal") return true;
+  return false;
 }
 
 export function isMatchFinal(score: ScoreEntry): boolean {
