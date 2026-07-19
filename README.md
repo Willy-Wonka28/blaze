@@ -18,6 +18,25 @@ Blaze listens to TxLINE's live score stream. When a goal is scored in a World Cu
 5. Telegram: Notify user of trade placement, missed opportunities, etc.
 ```
 
+## How to Test (for TxODDS Hackathon Judges)
+
+Blaze is currently in a **live-data gap**: the World Cup is over and Polymarket hasn't yet listed `soccer_player_goals` markets for the next season. However, every subsystem can be verified:
+
+### 1. `/test` (Paper Trade Mode)
+Send `/test` to the Telegram bot. Blaze injects a demo user into the in-memory cache and shows active markets. When a goal event arrives, paper trade notifications fire instead of real FAK orders — no wallet or funding needed.
+
+### 2. EIP-712 Signing (Verified)
+The FAK order pipeline signs and serializes a valid V2 order via `@polymarket/clob-client-v2`. Verified with a throwaway key against the live CLOB API — signature is correct and accepted.
+
+### 3. TxLINE SSE Stream (Verified)
+Blaze successfully connects to the TxLINE score stream, parses heartbeat/goal events, and filters via `isGoalEvent()`. Confirmed against the live `/api/fixtures/snapshot` endpoint.
+
+### 4. Onboarding Flow (Step-by-Step)
+`/start` walks through wallet creation → bridge deposit → threshold/bet-size/exposure → review. Each step persists to Supabase and handles mid-flow re-entry.
+
+### 5. Speed Optimizations
+See [`SPEED.md`](./SPEED.md) for the full breakdown of sub-5ms hot path techniques (in-memory cache, pre-warmed credentials, deferred SQLite, SSE dedup, non-blocking logger, etc.).
+
 ## Architecture
 
 ```
@@ -116,36 +135,6 @@ tx0dds/
 - **Storage**: SQLite (`better-sqlite3`) for player markets + goal tracking; Supabase for users, trades, and settings persistence
 - **Encryption**: AES-256-GCM for Polymarket credentials
 
-## Environment Variables
-
-| Variable | Description | Where to get it |
-|----------|-------------|-----------------|
-| `TXLINE_JWT` | TxLINE guest JWT (30-day expiry) | `curl -X POST https://txline.txodds.com/auth/guest/start` |
-| `TXLINE_API_TOKEN` | TxLINE API token | https://txline-docs.txodds.com/documentation/quickstart |
-| `TXLINE_DATA_BASE` | TxLINE API origin | Default: `https://txline.txodds.com` |
-| `TELEGRAM_BOT_TOKEN` | Telegram bot token | https://t.me/BotFather → /newbot |
-| `BACKEND_SECRET` | AES-256 encryption key (64 hex chars) | `node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"` |
-
-## Getting Started
-
-```bash
-# Install
-pnpm install
-
-# Set env vars
-export TXLINE_JWT="<your-guest-jwt>"
-export TXLINE_API_TOKEN="<your-api-token>"
-export TELEGRAM_BOT_TOKEN="<your-bot-token>"
-export BACKEND_SECRET="<64-char-hex-key>"
-
-# Run
-pnpm dev
-```
-
-## TxLINE Free Tier
-
-Bundle IDs **1** (60s delay) and **12** (real-time) are **free** for World Cup & International Friendlies. No TxL purchase required for hackathon use.
-
 ## Performance
 
 The internal pipeline (SSE event → FAK order submission) runs in **sub-5ms**. Polymarket enforces a 1-second hold on live sports markets before matching.
@@ -171,7 +160,3 @@ This means **Blaze cannot be tested live** until Polymarket lists player goals m
 - Blaze uses Polygon (not Solana) for Polymarket trading.
 - Each user gets their own Polygon wallet, created on first `/start`.
 - Polymarket credentials are derived via CLOB API and encrypted at rest.
-
-## License
-
-MIT
