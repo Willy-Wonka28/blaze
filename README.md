@@ -23,19 +23,10 @@ Blaze listens to TxLINE's live score stream. When a goal is scored in a World Cu
 Blaze is currently in a **live-data gap**: the World Cup is over and Polymarket hasn't yet listed `soccer_player_goals` markets for the next season. However, every subsystem can be verified:
 
 ### 1. `/test` (Paper Trade Mode)
-Send `/test` to the Telegram bot. Blaze injects a demo user into the in-memory cache and shows active markets. When a goal event arrives, paper trade notifications fire instead of real FAK orders — no wallet or funding needed.
+Send `/test` to the Telegram bot. Blaze injects a demo user into the in-memory cache and prints active markets. When a goal event arrives, paper trade notifications fire instead of real FAK orders (no wallet or funding needed). If no markets are present yet (scraper still warming up), Blaze tells you.
 
-### 2. EIP-712 Signing (Verified)
-The FAK order pipeline signs and serializes a valid V2 order via `@polymarket/clob-client-v2`. Verified with a throwaway key against the live CLOB API — signature is correct and accepted.
-
-### 3. TxLINE SSE Stream (Verified)
-Blaze successfully connects to the TxLINE score stream, parses heartbeat/goal events, and filters via `isGoalEvent()`. Confirmed against the live `/api/fixtures/snapshot` endpoint.
-
-### 4. Onboarding Flow (Step-by-Step)
-`/start` walks through wallet creation → bridge deposit → threshold/bet-size/exposure → review. Each step persists to Supabase and handles mid-flow re-entry.
-
-### 5. Speed Optimizations
-See [`SPEED.md`](./SPEED.md) for the full breakdown of sub-5ms hot path techniques (in-memory cache, pre-warmed credentials, deferred SQLite, SSE dedup, non-blocking logger, etc.).
+### 2. Speed Optimizations
+See [`SPEED.md`](./SPEED.md) for the full breakdown of sub-5ms hot path techniques — in-memory cache, pre-warmed credentials, deferred SQLite writes, SSE dedup, non-blocking logger, and more.
 
 ## Architecture
 
