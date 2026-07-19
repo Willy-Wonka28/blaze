@@ -16,9 +16,10 @@ const app = new Hono();
 
 app.use("*", cors({ origin: "*" }));
 
-app.get("/health", (c) => {
-  return c.json({ status: "ok", timestamp: Date.now() });
-});
+app.get("/ping", (c) => c.text("ok"));
+
+// Alias for cron-job.org health checks
+app.get("/health", (c) => c.text("ok"));
 
 // Boot blaze after TxLINE credentials are verified.
 const client = new TxLineClient({
