@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "tsx watch src/serve.ts",
     "build": "tsc --noEmit",
-    "start": "tsx src/serve.ts"
+    "start": "tsx src/serve.ts",
+    "postinstall": "pnpm rebuild better-sqlite3"
   },
   "dependencies": {
     "@hono/node-server": "^2.0.10",
