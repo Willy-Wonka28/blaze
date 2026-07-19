@@ -116,6 +116,36 @@ tx0dds/
 - **Storage**: SQLite (`better-sqlite3`) for player markets + goal tracking; Supabase for users, trades, and settings persistence
 - **Encryption**: AES-256-GCM for Polymarket credentials
 
+## Environment Variables
+
+| Variable | Description | Where to get it |
+|----------|-------------|-----------------|
+| `TXLINE_JWT` | TxLINE guest JWT (30-day expiry) | `curl -X POST https://txline.txodds.com/auth/guest/start` |
+| `TXLINE_API_TOKEN` | TxLINE API token | https://txline-docs.txodds.com/documentation/quickstart |
+| `TXLINE_DATA_BASE` | TxLINE API origin | Default: `https://txline.txodds.com` |
+| `TELEGRAM_BOT_TOKEN` | Telegram bot token | https://t.me/BotFather → /newbot |
+| `BACKEND_SECRET` | AES-256 encryption key (64 hex chars) | `node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"` |
+
+## Getting Started
+
+```bash
+# Install
+pnpm install
+
+# Set env vars
+export TXLINE_JWT="<your-guest-jwt>"
+export TXLINE_API_TOKEN="<your-api-token>"
+export TELEGRAM_BOT_TOKEN="<your-bot-token>"
+export BACKEND_SECRET="<64-char-hex-key>"
+
+# Run
+pnpm dev
+```
+
+## TxLINE Free Tier
+
+Bundle IDs **1** (60s delay) and **12** (real-time) are **free** for World Cup & International Friendlies. No TxL purchase required for hackathon use.
+
 ## Performance
 
 The internal pipeline (SSE event → FAK order submission) runs in **sub-5ms**. Polymarket enforces a 1-second hold on live sports markets before matching.
@@ -141,3 +171,7 @@ This means **Blaze cannot be tested live** until Polymarket lists player goals m
 - Blaze uses Polygon (not Solana) for Polymarket trading.
 - Each user gets their own Polygon wallet, created on first `/start`.
 - Polymarket credentials are derived via CLOB API and encrypted at rest.
+
+## License
+
+MIT
