@@ -22,6 +22,7 @@ CREATE TABLE blaze_users (
   pending_threshold DOUBLE PRECISION,
   pending_bet_size DOUBLE PRECISION,
   pending_max_exposure DOUBLE PRECISION,
+  onboarding_step INTEGER,
   is_active BOOLEAN DEFAULT true,
   created_at TIMESTAMPTZ DEFAULT now()
 );
