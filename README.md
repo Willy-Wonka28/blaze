@@ -113,38 +113,8 @@ tx0dds/
 - **Polymarket**: Gamma API (scraper) + CLOB API (trades) via `@polymarket/clob-client`
 - **Telegram**: `telegraf` bot framework
 - **Polygon Wallet**: `viem` (auto-created per user on `/start`)
-- **Storage**: SQLite (`better-sqlite3`) for markets, trades, users
+- **Storage**: SQLite (`better-sqlite3`) for player markets + goal tracking; Supabase for users, trades, and settings persistence
 - **Encryption**: AES-256-GCM for Polymarket credentials
-
-## Environment Variables
-
-| Variable | Description | Where to get it |
-|----------|-------------|-----------------|
-| `TXLINE_JWT` | TxLINE guest JWT (30-day expiry) | `curl -X POST https://txline.txodds.com/auth/guest/start` |
-| `TXLINE_API_TOKEN` | TxLINE API token | https://txline-docs.txodds.com/documentation/quickstart |
-| `TXLINE_DATA_BASE` | TxLINE API origin | Default: `https://txline.txodds.com` |
-| `TELEGRAM_BOT_TOKEN` | Telegram bot token | https://t.me/BotFather → /newbot |
-| `BACKEND_SECRET` | AES-256 encryption key (64 hex chars) | `node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"` |
-
-## Getting Started
-
-```bash
-# Install
-pnpm install
-
-# Set env vars
-export TXLINE_JWT="<your-guest-jwt>"
-export TXLINE_API_TOKEN="<your-api-token>"
-export TELEGRAM_BOT_TOKEN="<your-bot-token>"
-export BACKEND_SECRET="<64-char-hex-key>"
-
-# Run
-pnpm dev
-```
-
-## TxLINE Free Tier
-
-Bundle IDs **1** (60s delay) and **12** (real-time) are **free** for World Cup & International Friendlies. No TxL purchase required for hackathon use.
 
 ## Performance
 
@@ -160,7 +130,7 @@ For a detailed breakdown of every speed optimization — in-memory cache, pre-wa
 
 ## Live Testing
 
-A live end-to-end test was conducted and captured in the [demo video](). The EIP-712 signing pipeline, SSE listener, scraper, and Telegram onboarding all work as designed.
+A live end-to-end test was conducted and captured in the demo video submitted. The EIP-712 signing pipeline, SSE listener, scraper, and Telegram onboarding all work as designed.
 
 However, after the **2026 World Cup Final** (Spain vs Argentina, July 19), Polymarket's Gamma API no longer lists any `soccer_player_goals` markets that overlap with fixtures TxLINE is streaming. TxLINE's upcoming fixtures are international friendlies (Australia vs Brazil, New Zealand vs India, etc.) — none of which have corresponding player goals markets on Polymarket.
 
@@ -168,11 +138,6 @@ This means **Blaze cannot be tested live** until Polymarket lists player goals m
 
 ## Notes
 
-- Toss (prediction market) was extracted to `willy_wonka_28/toss-txodds` — a separate standalone project.
 - Blaze uses Polygon (not Solana) for Polymarket trading.
 - Each user gets their own Polygon wallet, created on first `/start`.
 - Polymarket credentials are derived via CLOB API and encrypted at rest.
-
-## License
-
-MIT
