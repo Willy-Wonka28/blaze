@@ -6,15 +6,12 @@
 // - TxLINE SSE listener (goal detection → trade execution)
 
 import { Hono } from "hono";
-import { cors } from "hono/cors";
 import { TxLineClient } from "./txline/index.js";
 import { config } from "./config.js";
 import { log } from "./logger.js";
 import { startBlaze } from "./blaze/index.js";
 
 const app = new Hono();
-
-app.use("*", cors({ origin: "*" }));
 
 app.get("/ping", (c) => c.text("ok"));
 
