@@ -107,17 +107,17 @@ function mainKeyboard() {
 }
 
 const HELP_TEXT =
-  "📋 Commands:\n" +
-  "📊 /status \u2014 Positions, settings, and wallet\n" +
-  "📈 /pnl \u2014 Trade history and profit/loss\n" +
-  "🎯 /threshold <value> \u2014 Set max price to trade at\n" +
-  "💵 /bet_size <amount> \u2014 Set spend per trade\n" +
-  "🛡️ /max_exposure <amount> \u2014 Set daily spending limit\n" +
-  "👛 /wallet \u2014 Show your wallet address\n" +
-  "💰 /check_balance \u2014 Query pUSD and POL balance\n" +
-  "🔄 /withdraw <address> \u2014 Withdraw pUSD to a wallet\n" +
-  "⏸️ /stop \u2014 Disable notifications\n" +
-  "🔥 /start \u2014 Re-enable bot\n\n" +
+  "📋 <b>Commands:</b>\n" +
+  "📊 /status — Positions, settings, and wallet\n" +
+  "📈 /pnl — Trade history and profit/loss\n" +
+  "🎯 /threshold <b>[value]</b> — Set max price to trade at\n" +
+  "💵 /bet_size <b>[amount]</b> — Set spend per trade\n" +
+  "🛡️ /max_exposure <b>[amount]</b> — Set daily spending limit\n" +
+  "👛 /wallet — Show your wallet address\n" +
+  "💰 /check_balance — Query pUSD and POL balance\n" +
+  "🔄 /withdraw <b>[address]</b> — Withdraw pUSD to a wallet\n" +
+  "⏸️ /stop — Disable notifications\n" +
+  "🔥 /start — Re-enable bot\n\n" +
   "⚠️ /threshold, /bet_size, and /max_exposure changes take effect at midnight.";
 
 function formatSettings(user: { threshold: number; bet_size: number; max_exposure: number; pending_threshold: number | null; pending_bet_size: number | null; pending_max_exposure: number | null } | null): string {
@@ -153,9 +153,9 @@ function formatSettings(user: { threshold: number; bet_size: number; max_exposur
 
 const SETTINGS_TEXT =
   "⚙️ Quick commands:\n" +
-  "  🎯 /threshold <value>\n" +
-  "  💵 /bet_size <amount>\n" +
-  "  🛡️ /max_exposure <amount>";
+  "  🎯 /threshold <b>[value]</b>\n" +
+  "  💵 /bet_size <b>[amount]</b>\n" +
+  "  🛡️ /max_exposure <b>[amount]</b>";
 
 async function handleCheckBalance(chatId: number, reply: (msg: string, extra?: Record<string, unknown>) => Promise<unknown>): Promise<void> {
   const user = await getUserByChatId(chatId);
@@ -784,6 +784,7 @@ export function initBot(): void {
     { command: "wallet", description: "Show your wallet address" },
     { command: "check_balance", description: "Query pUSD and POL balance" },
     { command: "withdraw", description: "Withdraw pUSD to a wallet" },
+    { command: "test", description: "Run a simulated test trade" },
     { command: "help", description: "Show commands" },
   ]);
 

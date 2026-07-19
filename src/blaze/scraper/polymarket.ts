@@ -386,8 +386,7 @@ export async function scrapePlayerGoalMarkets(): Promise<void> {
   log("Blaze", "Scraping Polymarket player goals markets (v3)...");
 
   try {
-    const db = getDb();
-    const now = Date.now();
+    const nowSeconds = Math.floor(Date.now() / 1000);
 
     const [gammaEvents, txFixtures] = await Promise.all([
       fetchSoccerPlayerGoalEvents(),
@@ -396,7 +395,7 @@ export async function scrapePlayerGoalMarkets(): Promise<void> {
 
     log("Blaze", `Gamma returned ${gammaEvents.length} events with player goals; TxLINE has ${txFixtures.length} fixtures`);
 
-    const matched = matchEventsToFixtures(gammaEvents, txFixtures, now);
+    const matched = matchEventsToFixtures(gammaEvents, txFixtures, nowSeconds);
 
     if (matched.length === 0) {
       log("Blaze", "No matching fixtures found — nothing to scrape");
@@ -405,6 +404,7 @@ export async function scrapePlayerGoalMarkets(): Promise<void> {
 
     const activeFixtureIds = new Set(matched.map((m) => m.txFixture.FixtureId));
 
+    const db = getDb();
     let totalMarkets = 0;
     let totalPlayers = 0;
     const tickSizeCache = new Map<string, number>();
