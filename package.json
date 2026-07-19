@@ -6,24 +6,23 @@
   "scripts": {
     "dev": "tsx watch src/serve.ts",
     "build": "tsc --noEmit",
-    "start": "tsx src/serve.ts",
-    "postinstall": "pnpm rebuild better-sqlite3"
+    "start": "tsx src/serve.ts"
   },
   "dependencies": {
     "@hono/node-server": "^2.0.10",
     "@polymarket/clob-client-v2": "^1.1.0",
     "@solana/web3.js": "^1.95.8",
     "@supabase/supabase-js": "^2.110.7",
-    "better-sqlite3": "^11.7.0",
     "bs58": "^6.0.0",
     "dotenv": "^17.4.2",
     "hono": "^4.7.0",
+    "sql.js": "^1.12.0",
     "telegraf": "^4.16.3",
     "viem": "^2.21.0"
   },
   "devDependencies": {
-    "@types/better-sqlite3": "^7.6.0",
     "@types/bun": "^1.2.0",
+    "@types/sql.js": "^1.4.11",
     "tsx": "^4.23.1",
     "typescript": "5.7.3"
   }

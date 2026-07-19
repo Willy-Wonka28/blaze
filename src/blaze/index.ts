@@ -13,6 +13,7 @@ import { initBot, broadcast } from "./bot/telegram.js";
 import { scrapePlayerGoalMarkets } from "./scraper/polymarket.js";
 import { startTxLineListener } from "./listener/txline.js";
 import { initCache, midnightRollover } from "./cache.js";
+import { initDb } from "./db.js";
 import { log } from "../logger.js";
 
 const REMINDER_BEFORE_MS = 2 * 3600_000; // 2 hours before midnight
@@ -26,6 +27,9 @@ function msUntilMidnight(): number {
 
 export async function startBlaze(client: TxLineClient): Promise<void> {
   log("Blaze", "Starting Blaze...");
+
+  // 0. Initialise SQLite (sql.js — WASM, no native binaries)
+  await initDb();
 
   // 1. Telegram bot
   initBot();
