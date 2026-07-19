@@ -2,6 +2,10 @@
 
 > A Telegram bot that auto-trades Polymarket over/under goals markets using real-time TxLINE data.
 
+[▶️ **Watch Demo**](https://drive.google.com/file/d/1zKTwluycIhENR2ppCDvg7BUpzvTEiyyc/view?usp=drivesdk)
+
+[🤖 **Try the Bot**](https://t.me/blaze_sport_bot)
+
 ## What It Does
 
 Blaze listens to TxLINE's live score stream. When a goal is scored in a World Cup match, it instantly buys "Yes" contracts on Polymarket's over/under goals markets — before the market reacts. The edge is **speed**.
