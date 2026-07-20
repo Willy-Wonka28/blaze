@@ -12,6 +12,12 @@ Blaze listens to TxLINE's live score stream. When a goal is scored in a World Cu
 
 **No AI. No LLM. No complex strategy.** Just a fast reaction to verified data.
 
+## Target Market
+
+1. **Power Traders** — High-frequency prediction market operators who need sub-5ms execution on live events
+2. **Sports Bettors** — Live match followers who want automated entry on goals without manual order placement
+3. **Scalpers** — Traders who exploit short-lived price windows on Polymarket before liquidity adjusts
+
 ## How It Works
 
 > **Note**: Blaze requires both **TxLINE** (real-time score data) and **Polymarket** (trading markets) to cover the same fixture. The scraper fuzzy-matches team names between the two. If a fixture exists on one but not the other, no trade can fire.
