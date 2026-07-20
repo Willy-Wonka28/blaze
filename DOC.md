@@ -2,7 +2,7 @@
 
 ## Core Idea
 
-Blaze is a Telegram bot that auto-trades Polymarket player goals markets using real-time TxLINE score data. It listens to TxLINE's SSE score stream, detects goal events as they happen, and instantly places Fill-and-Kill (FAK) "Yes" buy orders on Polymarket — before the market can react.
+Blaze is a Telegram bot that auto-trades Polymarket player goals markets using real-time TxLINE score data. It listens to TxLINE's SSE score stream, detects goal events as they happen, and instantly places Fill-and-Kill (FAK) "Yes" buy orders on Polymarket, before the market can react.
 
 The edge is speed. No AI, no LLM, no complex strategy. Just a fast reaction to verified data.
 
@@ -42,13 +42,13 @@ SSE goal event
 
 ### Speed Optimizations
 
-1. **In-memory Map cache** — All hot-path data in JS Maps (~0.0001ms reads vs SQLite ~0.1ms vs Supabase HTTP ~50-200ms)
-2. **Credential pre-warm** — AES-256-GCM decryption of all users' Polymarket creds at startup
-3. **SSE dedup** — `Set<string>` with 60s TTL prevents duplicate trades on reconnect
-4. **Exponential backoff** — Reconnect with `min(5000 * 2^(n-1), 120000)`, max 10 attempts
-5. **Non-blocking logger** — `setImmediate()` defers console.log writes
-6. **Fire-and-forget writes** — `insertTrade()` without `await`; goal counts via `setImmediate()`
-7. **Single network call on hot path** — Only the FAK order itself hits the network
+1. **In-memory Map cache**: All hot-path data in JS Maps (~0.0001ms reads vs SQLite ~0.1ms vs Supabase HTTP ~50-200ms)
+2. **Credential pre-warm**: AES-256-GCM decryption of all users' Polymarket creds at startup
+3. **SSE dedup**: `Set<string>` with 60s TTL prevents duplicate trades on reconnect
+4. **Exponential backoff**: Reconnect with `min(5000 * 2^(n-1), 120000)`, max 10 attempts
+5. **Non-blocking logger**: `setImmediate()` defers console.log writes
+6. **Fire-and-forget writes**: `insertTrade()` without `await`; goal counts via `setImmediate()`
+7. **Single network call on hot path**: Only the FAK order itself hits the network
 
 ## TxLINE Endpoints Used
 
@@ -58,7 +58,7 @@ Base URL: `https://txline.txodds.com`
 |----------|--------|---------|
 | `/auth/guest/start` | POST | Create guest session, obtain JWT |
 | `/api/fixtures/snapshot` | GET | Fetch all fixtures (filtered by competitionId) |
-| `/api/scores/stream` | GET (SSE) | Real-time score stream — **the core data source** |
+| `/api/scores/stream` | GET (SSE) | Real-time score stream, **the core data source** |
 | `/api/scores/snapshot/{fixtureId}` | GET | Score snapshot for a fixture |
 | `/api/scores/updates/{fixtureId}` | GET | Score updates for a fixture |
 | `/api/scores/updates/{epochDay}/{hourOfDay}/{interval}` | GET | Time-bucketed score updates |
