@@ -82,3 +82,45 @@ The score stream (`/api/scores/stream`) is the only SSE endpoint actively consum
 - `Last-Event-ID` for resumption on reconnect
 - Heartbeat events are skipped
 - Only `Action: "goal"` events are processed
+
+## Architecture
+
+```
+┌─────────────────────────────────────────────────┐
+│              TxLINE Score Stream                 │
+│  /api/scores/stream → SSE (real-time)           │
+│  Goal events: action, player, minute, fixture   │
+└──────────────────────┬──────────────────────────┘
+                       │
+┌──────────────────────▼──────────────────────────┐
+│              Bot Core (Bun + Hono)               │
+│  ┌──────────────────────────────────────────┐   │
+│  │  Telegram Bot                             │   │
+│  │  - /start → create wallet                 │   │
+│  │  - /settings → threshold, bet size, etc.  │   │
+│  │  - Notifies on trades, discoveries, etc.  │   │
+│  └──────────────────────────────────────────┘   │
+│                                                  │
+│  ┌──────────────────────────────────────────┐   │
+│  │  Polymarket Scraper                       │   │
+│  │  - Fetches O/U totals markets (Gamma API) │   │
+│  │  - Maps team names → TxLINE fixture IDs   │   │
+│  │  - Caches in SQLite, refreshes every 30m  │   │
+│  └──────────────────────────────────────────┘   │
+│                                                  │
+│  ┌──────────────────────────────────────────┐   │
+│  │  TxLINE Listener                         │   │
+│  │  - SSE connection with backoff            │   │
+│  │  - Filters for goal events only           │   │
+│  │  - Extracts player name from action       │   │
+│  └──────────────────────────────────────────┘   │
+│                                                  │
+│  ┌──────────────────────────────────────────┐   │
+│  │  Trade Executor                          │   │
+│  │  - Look up player's market in SQLite      │   │
+│  │  - Check yes_price < threshold            │   │
+│  │  - Execute FAK order via CLOB API         │   │
+│  │  - Per-user encrypted Polymarket creds    │   │
+│  └──────────────────────────────────────────┘   │
+└─────────────────────────────────────────────────┘
+```
