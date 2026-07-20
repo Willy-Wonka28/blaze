@@ -6,7 +6,7 @@
 // Re-runs every 30 minutes to discover new markets and update prices.
 
 import { getDb, type PlayerMarketRow, upsertPlayerIdMap } from "../db.js";
-import { syncPlayerIdToCache, syncMarketsToCache, syncFixtureNameToCache } from "../cache.js";
+import { syncPlayerIdToCache, syncMarketsToCache, syncFixtureNameToCache, setScrapeComplete } from "../cache.js";
 import { broadcast } from "../bot/telegram.js";
 import { config } from "../../config.js";
 import { log } from "../../logger.js";
@@ -532,6 +532,8 @@ export async function scrapePlayerGoalMarkets(): Promise<void> {
     }
   } catch (error) {
     log("Blaze", `Player goals scraper failed: ${error}`);
+  } finally {
+    setScrapeComplete();
   }
 }
 

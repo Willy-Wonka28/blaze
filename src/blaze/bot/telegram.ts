@@ -7,7 +7,7 @@ import { encrypt, decrypt } from "../crypto/aes.js";
 import { deriveAndStoreCredentials } from "../crypto/polymarket.js";
 import { log } from "../../logger.js";
 import { getDb } from "../db.js";
-import { getActiveUsersFromCache, addTestUser, removeTestUser, getCachedFixtureSummary, addRealUserToCache } from "../cache.js";
+import { getActiveUsersFromCache, addTestUser, removeTestUser, getCachedFixtureSummary, addRealUserToCache, isScrapeComplete } from "../cache.js";
 import {
   getUserByChatId,
   upsertUser,
@@ -467,7 +467,11 @@ export function initBot(): void {
     const summary = getCachedFixtureSummary();
 
     if (summary.marketCount === 0) {
-      await ctx.reply("⏳ Scraper still initializing... markets will appear shortly.");
+      if (!isScrapeComplete()) {
+        await ctx.reply("⏳ Scraper still initializing... markets will appear shortly.");
+      } else {
+        await ctx.reply("⚠️ No active player goals markets found right now.\n\nThis can happen between seasons or when no covered fixtures have active Polymarket markets. The scraper re-runs every 30 minutes.");
+      }
       return;
     }
 

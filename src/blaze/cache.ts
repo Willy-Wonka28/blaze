@@ -32,6 +32,7 @@ const userCache = new Map<number, CachedUser>();
 const playerNameMap = new Map<string, string>(); // "fixtureId:externalId" → playerName
 const marketCache = new Map<string, PlayerMarketRow[]>(); // "fixtureId:playerName" → markets
 const fixtureNameCache = new Map<number, string>(); // fixtureId → "TeamA vs TeamB"
+let scrapeComplete = false;
 
 function marketKey(fixtureId: number, playerName: string): string {
   return `${fixtureId}:${playerName}`;
@@ -180,6 +181,14 @@ export async function addRealUserToCache(chatId: number): Promise<void> {
 
 export function syncFixtureNameToCache(fixtureId: number, name: string): void {
   fixtureNameCache.set(fixtureId, name);
+}
+
+export function isScrapeComplete(): boolean {
+  return scrapeComplete;
+}
+
+export function setScrapeComplete(): void {
+  scrapeComplete = true;
 }
 
 export function getCachedFixtureSummary(): { fixtureCount: number; marketCount: number; fixtureNames: string[] } {
